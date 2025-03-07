@@ -1,41 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRACKING WEBSITE</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-<style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
-    header { background-color: #2c3e50; color: #fff; padding: 10px 0; }
-    header img { height: 80px; }
-    header h1 { margin: 5px 0; }
-    #map { height: 500px; width: 80%; margin: 20px auto; border: 2px solid #2c3e50; border-radius: 10px; }
-    footer { margin-top: 20px; color: #555; }
-</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACKING WEBSITE</title>
+
+   
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha384-mZerH2dFJzDlm9wQbhMrGB3K0D08n0Gp7AhUg+J4hO70I7B8V25Fq0d8S0zCBl7f" crossorigin="" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        header img {
+            height: 80px;
+        }
+
+        header h1 {
+            margin: 5px 0;
+        }
+
+        #map {
+            height: 500px;
+            width: 80%;
+            margin: 20px auto;
+            border: 2px solid #2c3e50;
+            border-radius: 10px;
+        }
+
+        footer {
+            margin-top: 20px;
+            color: #555;
+        }
+    </style>
 </head>
+
 <body>
 
-
 <header>
-    <img src="vignanclg.png" alt="Vignan College Logo" style="height: 80px;">
+    <img src="vignanclg.png" alt="Vignan College Logo">
     <h1>VIGNAN'S INSTITUTE OF INFORMATION TECHNOLOGY</h1>
 </header>
 
-
 <div id="map"></div>
 
-
 <footer>
-    <p>&copy; 2025 My College Name. All Rights Reserved.</p>
+    <p>&copy; 2025 Vignan's Institute of Information Technology. All Rights Reserved.</p>
 </footer>
 
 
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha384-NueZtYpsPSMKkZ8pU5wAXJmZgE+8L9hvKMtPBZ5kcFMVWdAnGrD8nkQzxOA/Ol+0" crossorigin=""></script>
+
 <script>
     
-    const map = L.map('map').setView([17.710833,83.165278], 15);  
+    const map = L.map('map').setView([17.710833, 83.165278], 15);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
     }).addTo(map);
