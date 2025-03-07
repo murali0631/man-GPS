@@ -33,7 +33,6 @@
 <button onclick="getLocation()">Share My Location</button>
 <p id="location"></p>
 
-
 <div id="map"></div>
 
 
@@ -47,8 +46,8 @@
 
 <script>
     let map;  
+    let userMarker;  
 
-   
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -56,11 +55,11 @@
                 const lon = position.coords.longitude;
                 document.getElementById("location").innerText = `📍 Your Location: Latitude: ${lat}, Longitude: ${lon}`;
 
-              
+               
                 if (!map) {
                     map = L.map('map').setView([lat, lon], 15);
 
-               
+                    
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 18,
                     }).addTo(map);
@@ -68,18 +67,25 @@
                     map.setView([lat, lon], 15);
                 }
 
-               
-                L.marker([lat, lon]).addTo(map)
+
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                }
+
+
+                userMarker = L.marker([lat, lon]).addTo(map)
                     .bindPopup("<b>You are here!</b>")
                     .openPopup();
 
+                
                 const collegeLat = 17.710833;
                 const collegeLon = 83.165278;
                 L.marker([collegeLat, collegeLon]).addTo(map)
                     .bindPopup("<b>Vignan's Institute of Information Technology, Duvvada</b><br>Visakhapatnam, Andhra Pradesh");
 
-            }, () => {
-                alert("Location access denied!");
+            }, (error) => {
+                alert("Location access denied or not available!");
+                console.error(error);
             });
         } else {
             alert("Geolocation is not supported by this browser.");
