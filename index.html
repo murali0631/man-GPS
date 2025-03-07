@@ -9,9 +9,76 @@
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
+<!-- Firebase SDK (Modular v9+) -->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBV6X7OBWRwyk_S8jSmNu2qJ4tclA2nUa8",
+        authDomain: "location-tracker-68370.firebaseapp.com",
+        databaseURL: "https://location-tracker-68370-default-rtdb.firebaseio.com",
+        projectId: "location-tracker-68370",
+        storageBucket: "location-tracker-68370.appspot.com",
+        messagingSenderId: "1034583388083",
+        appId: "1:1034583388083:web:ef0016b4bbae31d96aa5c6"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // 🔵 Improved Geolocation and Map Initialization
+    document.addEventListener("DOMContentLoaded", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showLocation, showError);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    });
+
+    function showLocation(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Initialize map at user's location
+        const map = L.map("map").setView([lat, lon], 15);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Add marker for user's location
+        const marker = L.marker([lat, lon]).addTo(map);
+        marker.bindPopup("You are here!").openPopup();
+
+        // Save Location to Firebase
+        const locationData = { lat: lat, lon: lon, timestamp: Date.now() };
+        const locationRef = ref(database, 'locations');
+        push(locationRef, locationData)
+            .then(() => console.log("Location saved successfully!"))
+            .catch((error) => console.error("Error saving location:", error));
+    }
+
+    function showError(error) {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                alert("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                alert("The request to get user location timed out.");
+                break;
+            default:
+                alert("An unknown error occurred.");
+                break;
+        }
+    }
+</script>
 
 <style>
     body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; }
@@ -28,56 +95,10 @@
 </header>
 
 <h2>Track Your Location</h2>
-<button onclick="getLocation()">Share My Location</button>
 <div id="map"></div>
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-    // 🔵 Your Firebase Config
-    const firebaseConfig = {
-       apiKey: "YOUR_API_KEY",
-       authDomain: "your-project-id.firebaseapp.com",
-       databaseURL: "https://your-project-id.firebaseio.com",
-       projectId: "your-project-id",
-       storageBucket: "your-project-id.appspot.com",
-       messagingSenderId: "YOUR_SENDER_ID",
-       appId: "YOUR_APP_ID"
-    };
-
-    // 🔵 Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    // 🔵 Initialize Leaflet Map
-    const map = L.map('map').setView([17.710833, 83.165278], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
-
-    // 🔵 Get User Location and Save to Firebase
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-
-                // Update Map with User Location
-                const userMarker = L.marker([lat, lon]).addTo(map)
-                    .bindPopup("<b>Your Current Location</b>")
-                    .openPopup();
-                map.setView([lat, lon], 15);
-
-                // Save Location to Firebase
-                const locationData = { lat: lat, lon: lon, timestamp: Date.now() };
-                database.ref('locations').push(locationData);
-                alert("Location saved successfully!");
-
-            }, () => { alert("Location access denied!"); });
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-</script>
 
 </body>
 </html>
